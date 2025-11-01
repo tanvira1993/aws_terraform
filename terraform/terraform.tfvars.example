@@ -1,0 +1,139 @@
+# ============================================================================
+# Terraform Variables Configuration Example
+# ============================================================================
+# Copy this file to terraform.tfvars and customize values
+# Command: cp terraform.tfvars.example terraform.tfvars
+
+# ============================================================================
+# General Configuration
+# ============================================================================
+aws_region   = "us-east-1"
+project_name = "trading-app"
+environment  = "production"  # Options: dev, staging, production
+
+# ============================================================================
+# Domain Configuration (Optional)
+# ============================================================================
+# Leave empty if you don't have a custom domain
+# If you have a domain, ACM certificate will be created automatically
+domain_name = ""  # Example: "example.com" (don't include subdomain)
+
+# ============================================================================
+# Networking Configuration
+# ============================================================================
+vpc_cidr             = "10.0.0.0/16"
+public_subnet_cidrs  = ["10.0.1.0/24", "10.0.2.0/24"]
+private_subnet_cidrs = ["10.0.10.0/24", "10.0.11.0/24"]
+
+# Cost optimization: Use single NAT Gateway (recommended for dev/small prod)
+single_nat_gateway = true  # Set to false for high availability (2 NAT Gateways)
+
+# ============================================================================
+# EKS Configuration
+# ============================================================================
+eks_cluster_version     = "1.28"
+eks_node_instance_types = ["m5.large"]
+eks_node_min_size       = 1
+eks_node_max_size       = 4
+eks_node_desired_size   = 1
+eks_node_disk_size      = 50
+
+# Enable Spot instances for cost savings (recommended)
+enable_eks_spot_instances = true
+
+# ============================================================================
+# RDS PostgreSQL Configuration
+# ============================================================================
+rds_instance_class          = "db.m5.large"
+rds_allocated_storage       = 100  # GB
+rds_engine_version          = "15.4"
+rds_database_name           = "mydb"
+rds_master_username         = "admin"
+rds_backup_retention_period = 7  # days
+
+# RDS Proxy (required for 200+ concurrent connections)
+enable_rds_proxy           = true
+rds_proxy_max_connections  = 200
+
+# ============================================================================
+# ElastiCache Redis Configuration
+# ============================================================================
+redis_node_type                = "cache.t3.small"
+redis_num_cache_nodes          = 1
+redis_engine_version           = "7.0"
+redis_snapshot_retention_limit = 3  # days
+
+# ============================================================================
+# Amazon MQ (RabbitMQ) Configuration
+# ============================================================================
+mq_instance_type   = "mq.t3.micro"
+mq_engine_version  = "3.11.20"
+mq_deployment_mode = "SINGLE_INSTANCE"  # or "CLUSTER_MULTI_AZ" for HA
+mq_admin_username  = "admin"
+
+# ============================================================================
+# EC2 Configuration (ClickHouse + Jenkins)
+# ============================================================================
+ec2_instance_type           = "m5.large"
+ec2_root_volume_size        = 50   # GB
+clickhouse_data_volume_size = 100  # GB
+jenkins_data_volume_size    = 50   # GB
+
+# Enable AWS Systems Manager Session Manager (recommended - no SSH needed)
+ec2_enable_ssm = true
+
+# ============================================================================
+# Load Balancer Configuration
+# ============================================================================
+# Set to true if you have ACM certificate
+alb_enable_https = false
+
+# Provide ACM certificate ARN if enabling HTTPS
+alb_certificate_arn = ""  # Example: "arn:aws:acm:us-east-1:123456789012:certificate/abc..."
+
+# ============================================================================
+# S3 Configuration
+# ============================================================================
+s3_bucket_prefix = "trading-app"  # Will create: trading-app-<random-suffix>
+
+# Lifecycle policies (auto-delete old data)
+s3_lifecycle_logs_expiration_days                = 7   # days
+s3_lifecycle_clickhouse_backup_expiration_days   = 15  # days
+
+# ============================================================================
+# ECR Configuration
+# ============================================================================
+ecr_repositories = [
+  "api-server",
+  "worker",
+  "frontend"
+]
+ecr_image_retention_count = 10  # Keep last 10 images per repository
+
+# ============================================================================
+# CloudWatch Configuration
+# ============================================================================
+cloudwatch_log_retention_days = 7  # days
+
+# ============================================================================
+# Secrets Manager Configuration
+# ============================================================================
+secrets_recovery_window_days = 7  # days (minimum is 7)
+
+# ============================================================================
+# Cost Optimization
+# ============================================================================
+enable_cost_optimization = true
+enable_s3_vpc_endpoint   = true  # Free - saves NAT Gateway costs
+
+# ============================================================================
+# Resource Tags
+# ============================================================================
+tags = {
+  Project     = "trading-app"
+  Environment = "production"
+  ManagedBy   = "terraform"
+  Owner       = "devops-team"
+  CostCenter  = "infrastructure"
+}
+
