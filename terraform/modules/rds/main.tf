@@ -5,7 +5,7 @@
 resource "random_password" "rds" {
   length  = 32
   special = true
-  override_special = "!#$%&*()-_=+[]{}<>:?"
+  override_special = "!#$%&*()-_+<>?"  # Use safe special characters
 }
 
 # ============================================================================

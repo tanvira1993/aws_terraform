@@ -1,0 +1,152 @@
+================================================================================
+                    SHOULD I USE ROOT OR IAM ACCOUNT?
+================================================================================
+
+YOUR QUESTION:
+"I am using IAM account. Should I use root account? Or do I need to give 
+permissions on this IAM account?"
+
+SHORT ANSWER:
+✅ Keep using your IAM account (DO NOT use root!)
+✅ Yes, you need to add permissions to your IAM account
+
+================================================================================
+                              IMPORTANT
+================================================================================
+
+❌ NEVER USE ROOT ACCOUNT FOR TERRAFORM/DEPLOYMENTS
+
+Why?
+- Root has unlimited access (security risk)
+- No way to limit what root can do
+- If credentials leak, your entire AWS account is compromised
+- AWS best practice: ONLY use root for initial setup and billing
+
+✅ USE IAM ACCOUNT WITH PROPER PERMISSIONS
+
+Why?
+- You can limit permissions (principle of least privilege)
+- Better security and auditing
+- Can be revoked/rotated easily
+- This is the AWS recommended approach
+
+================================================================================
+                         WHAT YOU NEED TO DO
+================================================================================
+
+STEP 1: Check if it's a permission issue or account restriction
+---------------------------------------------------------------
+
+Run this script to diagnose:
+
+    cd /Users/tanvirahamed/Evoliq-Tech/aws_journey/terraform
+    ./check-permissions.sh
+
+This will tell you:
+- ✅ If you have permissions (then it's account restriction)
+- ❌ If you lack permissions (then add permissions)
+
+STEP 2A: If you lack IAM permissions
+-------------------------------------
+
+Add these permissions to your IAM account:
+
+Quick fix (full access):
+    aws iam attach-user-policy \
+      --user-name YOUR_IAM_USERNAME \
+      --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
+
+OR manually via AWS Console:
+    1. Go to: https://console.aws.amazon.com/iam/
+    2. Click "Users" → Find your IAM user
+    3. Click "Add permissions"
+    4. Attach policy: "AdministratorAccess"
+
+STEP 2B: If you have permissions but still get error
+----------------------------------------------------
+
+This means it's an account-level restriction.
+→ Contact AWS Support (see WHAT_TO_DO_NOW.txt for template)
+
+================================================================================
+                      WHO SHOULD ADD PERMISSIONS?
+================================================================================
+
+Option 1: If you have admin access
+-----------------------------------
+You can add permissions to yourself using the commands above.
+
+Option 2: If you DON'T have admin access
+-----------------------------------------
+Ask your AWS account administrator to:
+1. Add "AdministratorAccess" policy to your IAM user
+   OR
+2. Add these specific policies:
+   - ElasticLoadBalancingFullAccess
+   - AmazonEC2FullAccess
+   - AmazonEKSClusterPolicy
+   - AmazonRDSFullAccess
+   - AmazonElastiCacheFullAccess
+   - IAMFullAccess
+   - AmazonS3FullAccess
+
+Option 3: If you're the ONLY user/admin
+----------------------------------------
+1. Sign in with root account (just this once)
+2. Go to IAM → Users → Your IAM user
+3. Add "AdministratorAccess" policy
+4. Sign out from root
+5. Sign back in with IAM user
+6. Never use root again
+
+================================================================================
+                        TESTING YOUR PERMISSIONS
+================================================================================
+
+Run these commands to test:
+
+# Test 1: Check who you are
+aws sts get-caller-identity
+
+# Test 2: Can you list load balancers?
+aws elbv2 describe-load-balancers --region us-east-1
+
+# Test 3: Can you check ALB limits?
+aws elbv2 describe-account-limits --region us-east-1
+
+RESULTS:
+--------
+If you get "AccessDenied" 
+→ You need IAM permissions (add them)
+
+If you get "OperationNotPermitted"
+→ Account restriction (contact AWS Support)
+
+If they work (show results)
+→ You have permissions! Error is account-level restriction.
+
+================================================================================
+                            QUICK SUMMARY
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│  ❌ DON'T:  Use root account for Terraform                      │
+│  ✅ DO:     Use IAM account with proper permissions             │
+│                                                                 │
+│  NEXT STEP: Run ./check-permissions.sh to diagnose             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+================================================================================
+                         DETAILED DOCUMENTATION
+================================================================================
+
+For more details, see:
+  📄 CHECK_IAM_PERMISSIONS.md - Complete IAM permissions guide
+  📄 WHAT_TO_DO_NOW.txt - Next steps after fixing permissions
+  📄 DEPLOYMENT_ERRORS_AND_FIXES.md - All errors explained
+
+================================================================================
+
+
