@@ -1,0 +1,172 @@
+# ============================================================================
+# Terraform .gitignore
+# ============================================================================
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files (NEVER commit state files - they contain sensitive data)
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Exclude all .tfvars files, which are likely to contain sensitive data
+*.tfvars
+*.tfvars.json
+
+# Ignore override files as they are usually used to override resources locally
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
+
+# ============================================================================
+# Sensitive Files (NEVER commit these)
+# ============================================================================
+
+# SSH keys
+*.pem
+*.key
+*.ppk
+
+# Credentials and secrets
+*credentials*
+*secrets*
+*.env
+.env.*
+
+# AWS credentials
+.aws/
+aws-credentials.txt
+
+# Output from get-credentials.sh script
+terraform/credentials.txt
+terraform/credentials-*.txt
+terraform/all-credentials.txt
+
+# Terraform plan output
+terraform-plan-output.txt
+terraform-plan-readable.txt
+*.tfplan
+
+# ============================================================================
+# OS and IDE Files
+# ============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+*~
+.directory
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDE - VSCode
+.vscode/
+*.code-workspace
+
+# IDE - IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# IDE - Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ============================================================================
+# Backup and Temporary Files
+# ============================================================================
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+*.tmp
+*.swp
+*.swo
+
+# Log files
+*.log
+
+# Terraform lock file (optional - some teams commit this, some don't)
+# Uncomment the line below if you don't want to commit the lock file
+# .terraform.lock.hcl
+
+# ============================================================================
+# Documentation and Output Files (Optional - adjust as needed)
+# ============================================================================
+
+# Keep these commented if you want to commit documentation
+# DEPLOYMENT_ERRORS_AND_FIXES.md
+# TERRAFORM_PLAN_SUMMARY.md
+# WHAT_TO_DO_NOW.txt
+
+# ============================================================================
+# Node.js (if you have any helper scripts)
+# ============================================================================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ============================================================================
+# Python (if you have any helper scripts)
+# ============================================================================
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv
+
+# ============================================================================
+# Custom - Project Specific
+# ============================================================================
+
+# Ignore generated credential files
+get-credentials-output.txt
+all-service-credentials.txt
+
+# Ignore Terraform module downloads
+.terraform.d/
+.terraform.lock.hcl.backup
+
+# ============================================================================
+# Keep These Files (Examples for reference)
+# ============================================================================
+
+# These files SHOULD be committed:
+# - *.tf (all Terraform configuration files)
+# - *.tfvars.example (example variable files)
+# - README.md
+# - modules/**/*.tf
+# - backend.tf
+# - versions.tf
+# - main.tf
+# - variables.tf
+# - outputs.tf
+
+# ============================================================================
+
